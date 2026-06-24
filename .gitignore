@@ -1,0 +1,15 @@
+# Environment variables (keeps your API keys secure!)
+.env
+
+# Python caching
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Local MLB stats cache (keeps your Git repository clean and lightweight)
+cache/
+saved_picks/
+
+# Streamlit config files
+.streamlit/
