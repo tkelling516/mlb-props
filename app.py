@@ -705,7 +705,12 @@ with tab_tracker:
         st.info("No saved picks found yet. The scheduler will automatically save today's picks at 12:00 PM, or you can trigger it by viewing the 'Player Prop Targets' tab.")
     else:
         import datetime as dt
-        yesterday_str = (datetime.today() - dt.timedelta(days=1)).strftime('%Y-%m-%d')
+        try:
+            viewed_date = datetime.strptime(st.session_state.date_str, '%Y-%m-%d')
+            yesterday_str = (viewed_date - dt.timedelta(days=1)).strftime('%Y-%m-%d')
+        except Exception:
+            yesterday_str = (datetime.today() - dt.timedelta(days=1)).strftime('%Y-%m-%d')
+            
         default_index = 0
         if yesterday_str in available_dates:
             default_index = available_dates.index(yesterday_str)
