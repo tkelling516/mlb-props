@@ -976,6 +976,8 @@ with tab_strategy:
                     "Yesterday's Performance": c["yesterday_stat"],
                     "Today's Matchup": c["today_game"],
                     "Opposing Pitcher": c["opponent_pitcher"],
+                    "Season Hits/Game": c["hits_per_game"],
+                    "Season Hits/PA": c["hits_per_pa"],
                     "Today's Hits Score": c["hits_score"],
                     "Matchup Rating": c["advantage"]
                 })
@@ -984,6 +986,8 @@ with tab_strategy:
             st.dataframe(
                 pd.DataFrame(df_playing),
                 column_config={
+                    "Season Hits/Game": st.column_config.NumberColumn("Season Hits/Game", format="%.2f"),
+                    "Season Hits/PA": st.column_config.NumberColumn("Season Hits/PA", format="%.3f"),
                     "Today's Hits Score": st.column_config.NumberColumn("Today's Hits Score", format="%.1f")
                 },
                 hide_index=True,

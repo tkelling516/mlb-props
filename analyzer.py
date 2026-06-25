@@ -973,7 +973,10 @@ def get_daily_leaderboards(all_games_data):
                         "savant_xwoba": hitter.get("savant", {}).get("xwoba", "TBD"),
                         "savant_barrel": hitter.get("savant", {}).get("barrel_rate", "TBD"),
                         "expected_runs": away_expected_runs,
-                        "bullpen_era": home_bp["era"]
+                        "bullpen_era": home_bp["era"],
+                        "hits": hitter.get("hits", 0),
+                        "plate_appearances": hitter.get("plate_appearances", 0),
+                        "games_played": hitter.get("games_played", 0)
                     }
                     batters_hits.append(hitter_info)
                     batters_hr.append(hitter_info)
@@ -1018,7 +1021,10 @@ def get_daily_leaderboards(all_games_data):
                         "savant_xwoba": hitter.get("savant", {}).get("xwoba", "TBD"),
                         "savant_barrel": hitter.get("savant", {}).get("barrel_rate", "TBD"),
                         "expected_runs": home_expected_runs,
-                        "bullpen_era": away_bp["era"]
+                        "bullpen_era": away_bp["era"],
+                        "hits": hitter.get("hits", 0),
+                        "plate_appearances": hitter.get("plate_appearances", 0),
+                        "games_played": hitter.get("games_played", 0)
                     }
                     batters_hits.append(hitter_info)
                     batters_hr.append(hitter_info)
@@ -1424,6 +1430,13 @@ def get_under_regression_candidates(yesterday_date_str, today_games_details, tod
             ts = today_scores.get(p_id, {})
             score = ts.get("hits_rating", None)
             
+            hits_val = ts.get("hits", 0)
+            pa_val = ts.get("plate_appearances", 0)
+            gp_val = ts.get("games_played", 0)
+            
+            hits_per_game = hits_val / gp_val if gp_val > 0 else 0.0
+            hits_per_pa = hits_val / pa_val if pa_val > 0 else 0.0
+            
             candidates.append({
                 "id": p_id,
                 "name": b_info["name"],
@@ -1432,7 +1445,9 @@ def get_under_regression_candidates(yesterday_date_str, today_games_details, tod
                 "today_game": th["game"],
                 "opponent_pitcher": th["opponent_pitcher"],
                 "hits_score": score,
-                "advantage": "🟢 Strong" if (isinstance(score, (int, float)) and score >= 75.0) else "🟡 Fair" if (isinstance(score, (int, float)) and score >= 65.0) else "🔴 Weak" if isinstance(score, (int, float)) else "N/A"
+                "advantage": "🟢 Strong" if (isinstance(score, (int, float)) and score >= 75.0) else "🟡 Fair" if (isinstance(score, (int, float)) and score >= 65.0) else "🔴 Weak" if isinstance(score, (int, float)) else "N/A",
+                "hits_per_game": hits_per_game,
+                "hits_per_pa": hits_per_pa
             })
         else:
             candidates.append({
@@ -1443,7 +1458,9 @@ def get_under_regression_candidates(yesterday_date_str, today_games_details, tod
                 "today_game": "No Game Today",
                 "opponent_pitcher": "N/A",
                 "hits_score": "N/A",
-                "advantage": "N/A"
+                "advantage": "N/A",
+                "hits_per_game": 0.0,
+                "hits_per_pa": 0.0
             })
             
     # Sort candidates: show playing today first, then lowest hits score first (best under candidates!)
